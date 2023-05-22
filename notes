@@ -1,0 +1,8 @@
+SECTION  1
+
+1.5
+create main_test.go (connection test for db)
+go get github.com/lib/pq for test postgres
+go mod tidy
+go get github.com/stretchr/testify
+folder util->random.go
