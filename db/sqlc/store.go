@@ -55,6 +55,8 @@ type TransferTxResult struct {
 	ToEntry     Entry    `json:"to_entry"`
 }
 
+// Perform a money  transfer from one account to the other
+// it creates a transfer record, add  account entries, and update accounts balance within a single database transacction
 func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
 
@@ -73,7 +75,7 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 
 		result.FromEntry, err = q.CreateEntry(ctx, CreateEntryParams{
 			AccountID: arg.FromAccountID,
-			Amount: -arg.Amount,
+			Amount:    -arg.Amount,
 		})
 		if err != nil {
 			return err
@@ -81,7 +83,7 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 
 		result.ToEntry, err = q.CreateEntry(ctx, CreateEntryParams{
 			AccountID: arg.ToAccountID,
-			Amount: -arg.Amount,
+			Amount:    arg.Amount,
 		})
 		if err != nil {
 			return err
