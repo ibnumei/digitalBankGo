@@ -1,5 +1,15 @@
 SECTION  1
 
+1.1
+Link dbdesigner : https://erd.dbdesigner.net/designer/schema/1689137845-digital-bank
+
+1.2
+setting docker images postgres:
+  - docker pull postgres:12-alpine
+  - docker run --name postgres12 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=mysecretpassword -d postgres:12-alpine
+  - docker exec -it postgres12 psql -U root
+  - docker logs postgres12
+
 1.5
 create main_test.go (connection test for db)
 go get github.com/lib/pq for test postgres
