@@ -2,14 +2,27 @@ SECTION  1
 
 1.1
 Link dbdesigner : https://erd.dbdesigner.net/designer/schema/1689137845-digital-bank
-
 1.2
 setting docker images postgres:
   - docker pull postgres:12-alpine
   - docker run --name postgres12 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=mysecretpassword -d postgres:12-alpine
   - docker exec -it postgres12 psql -U root
   - docker logs postgres12
-
+  - docker stop postgres12
+  - docker start postgres12
+1.3
+  - use golang-migrate => brew install golang-migrate
+  - migrate create -ext sql -dir db/migration -seq init_schema (initialize/using migration using golang migrate)
+  - create Makefile (for using shortcut in terminal to execute common command)
+  - create postgres, createdb, dropdb, migrateup & migratedown command  at Makefile
+1.4
+  - using sqlc for write query db (write first query, golang CRUD codes will automatically generated)
+  - brew install sqlc
+  - sqlc init => generate sqlc.yaml
+  - create sqlc command at Makefile
+  - create account.sql in query folder, write query sql, comment at the top of query is important,
+    comment will instruct sqlc how to generate golang function signature for this query. Ex `name CreateAccount :one` => createAccount is name function, one  for return 1 single Account object
+  - after write query, run make sqlc, for the first time, it will generates 3 file at sqlc folder, (account.sql.go, db.go & models.go)
 1.5
 create main_test.go (connection test for db)
 go get github.com/lib/pq for test postgres
