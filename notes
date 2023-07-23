@@ -24,8 +24,19 @@ setting docker images postgres:
     comment will instruct sqlc how to generate golang function signature for this query. Ex `name CreateAccount :one` => createAccount is name function, one  for return 1 single Account object
   - after write query, run make sqlc, for the first time, it will generates 3 file at sqlc folder, (account.sql.go, db.go & models.go)
 1.5
-create main_test.go (connection test for db)
-go get github.com/lib/pq for test postgres
-go mod tidy
-go get github.com/stretchr/testify
+  - create main_test.go (connection test for db)
+  - go get github.com/lib/pq for test postgres
+  - go mod tidy
+  - go get github.com/stretchr/testify
 folder util->random.go
+1.6
+Example: Transfer 10 USD from bank acc1 to bank acc2
+  1. Create a transfer record with amount = 10
+  2. Create an account entry for acc1 with amount = -10
+  3. Create an account entry for acc2 with amount = +10
+  4. Update balance acc1 -10
+  5. Update balance acc2 +10
+  - Struct Queries di db.go hanya mendukung 1 Query Operation, tidak mendukung banyak operation,
+    sehingga tidak mendukung penggunaan transaction. Maka dibuat store.go => Struct Store
+  - GetAccountForUpdate in account.sql, query FOR UPDATE diganti menjadi FOR NO KEY UPDATE,
+    untuk menghindari deadlock, memberi tau postgres bahwa ID(yg jadi foreign key di table lain) tidak di update
