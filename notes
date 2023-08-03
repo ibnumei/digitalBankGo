@@ -40,3 +40,21 @@ Example: Transfer 10 USD from bank acc1 to bank acc2
     sehingga tidak mendukung penggunaan transaction. Maka dibuat store.go => Struct Store
   - GetAccountForUpdate in account.sql, query FOR UPDATE diganti menjadi FOR NO KEY UPDATE,
     untuk menghindari deadlock, memberi tau postgres bahwa ID(yg jadi foreign key di table lain) tidak di update
+1.8
+Potential Deadlock:
+  Transaksi 1: Transfer $10 from account1 to account2
+  Transaksi 2: Transfer $10 from account2 to account1
+  Scenario:
+    1. Tx1 => UPDATE accounts SET balance = balance -10 WHERE ID = 1 RETURNING *;
+    2. Tx2 => UPDATE accounts SET balance = balance -10 WHERE ID = 2 RETURNING *;
+    3. Tx1 => UPDATE accounts SET balance = balance + 10 WHERE ID = 2 RETURNING *;  (Lock, karena Transaksi ke 2, sedang mengupdate ID=2 dan belum selesai)
+    4. Tx2 => UPDATE accounts SET balance = balance + 10 WHERE ID = 1 RETURNING *;  (DeadLock, karena Transaksi ke 4 menunggu Tx ke 1, Tx1 menunggu  Tx ke 3, Tx menunggu  Tx2)
+
+  Scenario Avoid Deadlock:
+    1. Tx1 => UPDATE accounts SET balance = balance -10 WHERE ID = 1 RETURNING *;
+    2. Tx2 => UPDATE accounts SET balance = balance +10 WHERE ID = 1 RETURNING *;
+    3. Tx1 => UPDATE accounts SET balance = balance +10 WHERE ID = 2 RETURNING *;
+    4. Commit Tx 1
+    5. Tx2 => UPDATE accounts SET balance = balance -10 WHERE ID = 2 RETURNING *;
+    6. Commit Tx 2
+
