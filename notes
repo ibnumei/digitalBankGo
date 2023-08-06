@@ -57,4 +57,16 @@ Potential Deadlock:
     4. Commit Tx 1
     5. Tx2 => UPDATE accounts SET balance = balance -10 WHERE ID = 2 RETURNING *;
     6. Commit Tx 2
+1.10
+  Trigger CI/CD : Event, Scheduled, Manually
+  Urutan .yaml =>
+    - Workflow
+      - Job 1
+        - Step 1
+          - Action 1
+          - Action 2
+        - Step 2
+      - Job 2
+
+  
 
