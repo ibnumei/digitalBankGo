@@ -68,5 +68,9 @@ Potential Deadlock:
         - Step 2
       - Job 2
 
-  
+SECTION 2
+
+2.1
+  - using gin for rest full api in go. Installation => $ go get -u github.com/gin-gonic/gin
+  - create file server.go in folder api
 
