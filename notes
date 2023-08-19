@@ -74,3 +74,11 @@ SECTION 2
   - using gin for rest full api in go. Installation => $ go get -u github.com/gin-gonic/gin
   - create file server.go in folder api
 
+2.13
+  - mock db for testing using gomock => go get github.com/golang/mock/mockgen@v1.6.0
+  - run which  mockgen at terminal => not found => should config/edit
+  - if using .bash_profile/ .bashrc => vi ~/.bash_profile or  vi ~/.bashrc
+  - if using .zshrc => vi ~/.zshrc  => press I => export PATH=$PATH:~/go/bin  => press ESC => press :wq => enter to save =>  source ~/.zshrc
+  - mockgen -package mockdb -destination db/mock/store.go github.com/ibnumei/digitalBankGo/db/sqlc Store
+
+
