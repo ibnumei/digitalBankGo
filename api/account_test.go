@@ -21,19 +21,19 @@ func TestGetAccountAPI(t *testing.T) {
 	account := randomAccount()
 
 	testCases := []struct {
-		name string
-		accountID  int64
-		buildStubs func(store *mockdb.MockStore)
+		name          string
+		accountID     int64
+		buildStubs    func(store *mockdb.MockStore)
 		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
 	}{
 		{
-			name: "OK",
+			name:      "OK",
 			accountID: account.ID,
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-				GetAccount(gomock.Any(), gomock.Eq(account.ID)).
-				Times(1).
-				Return(account, nil)
+					GetAccount(gomock.Any(), gomock.Eq(account.ID)).
+					Times(1).
+					Return(account, nil)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusOK, recorder.Code)
@@ -41,38 +41,38 @@ func TestGetAccountAPI(t *testing.T) {
 			},
 		},
 		{
-			name: "NotFound",
+			name:      "NotFound",
 			accountID: account.ID,
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-				GetAccount(gomock.Any(), gomock.Eq(account.ID)).
-				Times(1).
-				Return(db.Account{}, sql.ErrNoRows)
+					GetAccount(gomock.Any(), gomock.Eq(account.ID)).
+					Times(1).
+					Return(db.Account{}, sql.ErrNoRows)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusNotFound, recorder.Code)
 			},
 		},
 		{
-			name: "InternalError",
+			name:      "InternalError",
 			accountID: account.ID,
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-				GetAccount(gomock.Any(), gomock.Eq(account.ID)).
-				Times(1).
-				Return(db.Account{}, sql.ErrConnDone)
+					GetAccount(gomock.Any(), gomock.Eq(account.ID)).
+					Times(1).
+					Return(db.Account{}, sql.ErrConnDone)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusInternalServerError, recorder.Code)
 			},
 		},
 		{
-			name: "InvalidID",
+			name:      "InvalidID",
 			accountID: 0,
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-				GetAccount(gomock.Any(), gomock.Any()).
-				Times(0)
+					GetAccount(gomock.Any(), gomock.Any()).
+					Times(0)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusBadRequest, recorder.Code)
@@ -81,8 +81,8 @@ func TestGetAccountAPI(t *testing.T) {
 		//TODO: add more cases
 	}
 
-	for i := range testCases  {
-		tc:= testCases[i]
+	for i := range testCases {
+		tc := testCases[i]
 
 		t.Run(tc.name, func(t *testing.T) {
 			mockController := gomock.NewController(t)
@@ -96,7 +96,7 @@ func TestGetAccountAPI(t *testing.T) {
 			recorder := httptest.NewRecorder()
 
 			url := fmt.Sprintf("/accounts/%d", tc.accountID)
-			request, err  := http.NewRequest(http.MethodGet, url ,nil)
+			request, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)
 
 			server.router.ServeHTTP(recorder, request)
@@ -124,7 +124,6 @@ func TestGetAccountAPI(t *testing.T) {
 
 	// server.router.ServeHTTP(recorder, request)
 	//check response
-	
 
 }
 
