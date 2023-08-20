@@ -1,8 +1,10 @@
 package api
 
 import (
-    "github.com/gin-gonic/gin"
-    db "github.com/ibnumei/digitalBankGo/db/sqlc"
+	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
+	db "github.com/ibnumei/digitalBankGo/db/sqlc"
 )
 
 // Server serves HTTP request for out banking service
@@ -16,12 +18,14 @@ func NewServer(store db.Store) *Server  {
     server := &Server{store: store}
     router := gin.Default()
 
-    //List all routes
+    if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+        v.RegisterValidation("currency", validCurrency)
+    }
 
+    //List all routes
     router.POST("/accounts", server.createAccount)
     router.GET("/accounts/:id", server.getAccount)
     router.GET("/accounts", server.listAccount) //get list accounts with pagination
-
 
     router.POST("/transfers", server.createTransfer)
 
