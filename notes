@@ -12,7 +12,8 @@ setting docker images postgres:
   - docker start postgres12
 1.3
   - use golang-migrate => brew install golang-migrate
-  - migrate create -ext sql -dir db/migration -seq init_schema (initialize/using migration using golang migrate)
+  - migrate create -ext sql -dir db/migration -seq {nama_file} (initialize/using migration using golang migrate)
+  - migrate create -ext sql -dir db/migration -seq init_schema
   - create Makefile (for using shortcut in terminal to execute common command)
   - create postgres, createdb, dropdb, migrateup & migratedown command  at Makefile
 1.4
@@ -80,5 +81,11 @@ SECTION 2
   - if using .bash_profile/ .bashrc => vi ~/.bash_profile or  vi ~/.bashrc
   - if using .zshrc => vi ~/.zshrc  => press I => export PATH=$PATH:~/go/bin  => press ESC => press :wq => enter to save =>  source ~/.zshrc
   - mockgen -package mockdb -destination db/mock/store.go github.com/ibnumei/digitalBankGo/db/sqlc Store
+
+2.15
+  -  add table users, users to accounts is  1 to Many. 1 users Many Accounts, 1 Accounts 1 Users.
+  - 1 Users Many Accounts, but differents currency. Ex: Users 1. Joni USD, 2. Joni EUR. If the currency value is same, is not allowed
+  - create command make migrateup1Version & migratedown1Version. This  Command for up or  down 1 version from latest version at table schema_migration
+
 
 
