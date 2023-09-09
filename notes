@@ -87,5 +87,7 @@ SECTION 2
   - 1 Users Many Accounts, but differents currency. Ex: Users 1. Joni USD, 2. Joni EUR. If the currency value is same, is not allowed
   - create command make migrateup1Version & migratedown1Version. This  Command for up or  down 1 version from latest version at table schema_migration
 
-
+2.20
+  - go get -u github.com/golang-jwt/jwt/v5
+  - go get github.com/o1egl/paseto
 
