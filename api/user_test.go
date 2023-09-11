@@ -208,7 +208,7 @@ func TestCreateUserAPI(t *testing.T) {
 			tc.buildStubs(store)
 
 			// server := newTestServer(t, store)
-			server := NewServer(store)
+			server := newTestServer(t, store)
 
 			recorder := httptest.NewRecorder()
 
