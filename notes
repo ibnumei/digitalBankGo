@@ -91,3 +91,25 @@ SECTION 2
   - go get -u github.com/golang-jwt/jwt/v5
   - go get github.com/o1egl/paseto
 
+2.22
+  - add authentication & authorization for each api, except create user and login user
+  - A logged-in user can only create an account for him/herself
+  - A logged-in user can only get accounts that he/she owns
+  - A logged-in user can only list accounts that belong to him/her
+  - A logged-in user can only send money from his/her own account
+  - Before . Hanya bisa get list account  sesuai rule diatas
+  -- name: ListAccounts :many
+      SELECT * FROM  accounts
+      ORDER BY id
+      LIMIT $1
+      OFFSET $2;
+  - After 
+  -- name: ListAccounts :many
+      SELECT * FROM  accounts
+      WHERE owner = $1
+      ORDER BY id
+      LIMIT $2
+      OFFSET $3;
+  - make sqlc (re generate sql)
+  - make mock (re generate mock store for api unit test)
+
