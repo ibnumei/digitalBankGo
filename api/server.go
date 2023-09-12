@@ -46,11 +46,16 @@ func (server *Server) setupRouter() {
 	router.POST("/users", server.createUser)
 	router.POST("/users/login", server.loginUser)
 
-	router.POST("/accounts", server.createAccount)
-	router.GET("/accounts/:id", server.getAccount)
-	router.GET("/accounts", server.listAccount) //get list accounts with pagination
+	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
 
-	router.POST("/transfers", server.createTransfer)
+	//Rule: A logged-in user can only create an account for him/herself
+	authRoutes.POST("/accounts", server.createAccount)
+	//Rule: A logged-in user can only get accounts that he/she owns
+	authRoutes.GET("/accounts/:id", server.getAccount)
+	//Rule: A logged-in user can only list accounts that belong to him/her
+	authRoutes.GET("/accounts", server.listAccount) //get list accounts with pagination
+	//Rule: A logged-in user can only send money from his/her own account
+	authRoutes.POST("/transfers", server.createTransfer)
 
 	server.router = router
 }
