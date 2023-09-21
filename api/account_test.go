@@ -218,7 +218,7 @@ func TestCreateAccountAPI(t *testing.T) {
 				arg := db.CreateAccountParams{
 					Owner:    account.Owner,
 					Currency: account.Currency,
-					Balance:  0,
+					Balance:  100,
 				}
 
 				store.EXPECT().
