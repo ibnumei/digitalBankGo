@@ -1,7 +1,14 @@
+TODO
+1. Seharusnya response POST http://localhost:8080/users/login mengembalikan list accounts yg dipunya user
+   Sehingga saat GET http://localhost:8080/accounts/48 bisa menggunakan ID accounts dari payload token
+
+========================================================
 SECTION  1
 
 1.1
 Link dbdesigner : https://erd.dbdesigner.net/designer/schema/1689137845-digital-bank
+- 1 User can have max 3 Accounts (currency is unique key (USD, EUR, IDR))
+- 1x Transfer input 2 rows entries table & 1 row transfer table
 1.2
 setting docker images postgres:
   - docker pull postgres:12-alpine
@@ -12,7 +19,8 @@ setting docker images postgres:
   - docker start postgres12
 1.3
   - use golang-migrate => brew install golang-migrate
-  - migrate create -ext sql -dir db/migration -seq init_schema (initialize/using migration using golang migrate)
+  - migrate create -ext sql -dir db/migration -seq {nama_file} (initialize/using migration using golang migrate)
+  - migrate create -ext sql -dir db/migration -seq init_schema
   - create Makefile (for using shortcut in terminal to execute common command)
   - create postgres, createdb, dropdb, migrateup & migratedown command  at Makefile
 1.4
@@ -68,5 +76,48 @@ Potential Deadlock:
         - Step 2
       - Job 2
 
-  
+SECTION 2
+
+2.1
+  - using gin for rest full api in go. Installation => $ go get -u github.com/gin-gonic/gin
+  - create file server.go in folder api
+
+2.13
+  - mock db for testing using gomock => go get github.com/golang/mock/mockgen@v1.6.0
+  - run which  mockgen at terminal => not found => should config/edit
+  - if using .bash_profile/ .bashrc => vi ~/.bash_profile or  vi ~/.bashrc
+  - if using .zshrc => vi ~/.zshrc  => press I => export PATH=$PATH:~/go/bin  => press ESC => press :wq => enter to save =>  source ~/.zshrc
+  - mockgen -package mockdb -destination db/mock/store.go github.com/ibnumei/digitalBankGo/db/sqlc Store
+
+2.15
+  -  add table users, users to accounts is  1 to Many. 1 users Many Accounts, 1 Accounts 1 Users.
+  - 1 Users Many Accounts, but differents currency. Ex: Users 1. Joni USD, 2. Joni EUR. If the currency value is same, is not allowed
+  - create command make migrateup1Version & migratedown1Version. This  Command for up or  down 1 version from latest version at table schema_migration
+
+2.20
+  - go get -u github.com/golang-jwt/jwt/v5
+  - go get github.com/o1egl/paseto
+
+2.22
+  - add authentication & authorization for each api, except create user and login user
+  - A logged-in user can only create an account for him/herself
+  - A logged-in user can only get accounts that he/she owns
+  - A logged-in user can only list accounts that belong to him/her
+  - A logged-in user can only send money from his/her own account
+  - Before . Hanya bisa get list account  sesuai rule diatas
+  -- name: ListAccounts :many
+      SELECT * FROM  accounts
+      ORDER BY id
+      LIMIT $1
+      OFFSET $2;
+  - After 
+  -- name: ListAccounts :many
+      SELECT * FROM  accounts
+      WHERE owner = $1
+      ORDER BY id
+      LIMIT $2
+      OFFSET $3;
+  - make sqlc (re generate sql)
+  - make mock (re generate mock store for api unit test)
+
 
