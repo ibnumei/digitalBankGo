@@ -27,7 +27,7 @@ func (server *Server) createAccount(ctx *gin.Context) {
 	arg := db.CreateAccountParams{
 		Owner:    authPayload.Username,
 		Currency: req.Currency,
-		Balance:  0,
+		Balance:  100,
 	}
 
 	account, err := server.store.CreateAccount(ctx, arg)
@@ -92,7 +92,7 @@ func (server *Server) listAccount(ctx *gin.Context) {
 
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 	arg := db.ListAccountsParams{
-		Owner: authPayload.Username,
+		Owner:  authPayload.Username,
 		Limit:  req.PageSize,
 		Offset: (req.PageID - 1) * req.PageSize,
 	}

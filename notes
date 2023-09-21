@@ -1,7 +1,14 @@
+TODO
+1. Seharusnya response POST http://localhost:8080/users/login mengembalikan list accounts yg dipunya user
+   Sehingga saat GET http://localhost:8080/accounts/48 bisa menggunakan ID accounts dari payload token
+
+========================================================
 SECTION  1
 
 1.1
 Link dbdesigner : https://erd.dbdesigner.net/designer/schema/1689137845-digital-bank
+- 1 User can have max 3 Accounts (currency is unique key (USD, EUR, IDR))
+- 1x Transfer input 2 rows entries table & 1 row transfer table
 1.2
 setting docker images postgres:
   - docker pull postgres:12-alpine
@@ -112,4 +119,5 @@ SECTION 2
       OFFSET $3;
   - make sqlc (re generate sql)
   - make mock (re generate mock store for api unit test)
+
 
