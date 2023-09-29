@@ -1,0 +1,15 @@
+3.23
+* Create dockerfile
+* docker build -t digitalbank:latest .
+    - Jika hanya menjalankan docker run {docker run --name digitalbank -p 8080:8080 -e GIN_MODE=release digitalbank:latest}, maka tidakakan connect ke container db postgres
+    sehingga  harus  dibuat docker network.
+* docker network ls  => docker network inspect bridge
+    - network  default adalah bridge
+* docker network create bank-network
+* docker network connect bank-network postgres12
+    - memasukan container postgres12 ke network bank-network
+* docker run --name digitalbank --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:mysecretpassword@postgres12:5432/master_bank?sslmode=disable" digitalbank:latest
+    - run container and running with network bank-network
+
+DOCKER COMPOSE
+    - create start.sh file => chmod +x start.sh => to make start.sh executable
